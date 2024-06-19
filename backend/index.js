@@ -5,12 +5,13 @@ import { mongoDBURL, PORT } from "./config.js";
 import { Book } from "./models/bookModel.js";
 
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 app.get("/", (req, res) => {
   return res.status(234).send("Welcome to codeandrender bookstore");
 });
 
+// Creating a book (POST)
 app.post("/books", async (req, res) => {
   try {
     if (!req.body.title || !req.body.author || !req.body.publishYear) {
@@ -30,6 +31,20 @@ app.post("/books", async (req, res) => {
   } catch (error) {
     console.log(error.message);
     return res.status(500).send({ message: error.message });
+  }
+});
+
+// GETTING ALL BOOKS (GET)
+app.get("/books", async (req, res) => {
+  try {
+    const books = await Book.find({});
+    return res.status(200).json({
+      count: books.length,
+      data: books,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({ message: error.message });
   }
 });
 
