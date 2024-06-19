@@ -76,14 +76,29 @@ app.put("/book/:id", async (req, res) => {
     if (!result) {
       return res.status(404).json({ message: "Book not found" });
     }
-    return res.status(200).json({message: "Book updated successfully"});
+    return res.status(200).json({ message: "Book updated successfully" });
   } catch (error) {
     console.log(error.message);
     res.status(500).send({ message: error.message });
   }
 });
 
+// DELETING A BOOK USING AN ID (DELETE)
+app.delete("/book/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Book.findByIdAndDelete(id);
 
+    if (!result) {
+      return res.status(404).send({ message: "Book not found" });
+    }
+
+    return res.status(200).json({ message: "Book deleted successfully" });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).send({ message: error.message });
+  }
+});
 
 mongoose
   .connect(mongoDBURL)
